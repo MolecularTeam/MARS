@@ -35,9 +35,9 @@ os.environ["CUDA_VISIBLE_DEVICES"] = f"2,3,4,5"
 os.environ["WANDB_MODE"] = "disabled"
 
 # pretrained model timestamp
-timestamp_list = ["220530.113310", "220530.114703", "220530.114628",
-                  "220530.115302", "220530.115345", "220530.114808",
-                  "220530.120415", "220530.120704", "220530.121420"]
+timestamp_list = ["220530.113310", "Your subj2 model timestamp", "Your subj3 model timestamp",
+                  "Your subj4 model timestamp", "Your subj5 model timestamp", "Your subj6 model timestamp",
+                  "Your subj7 model timestamp", "Your subj8 model timestamp", "Your subj9 model timestamp"]
 
 
 class experiment():
@@ -75,7 +75,7 @@ class experiment():
         self.AC_WD = config["ACwd"]
 
         timestamp = timestamp_list[args.subjectID - 1]
-        save_dir = f"/PRETRAIN_DIR/subject{self.sbj_idx}/"
+        save_dir = f"pretrain_dir/subject{self.sbj_idx}/"
 
         os.makedirs(save_dir, exist_ok=True)
         PATH = save_dir + f"{timestamp}.pt"
@@ -172,8 +172,6 @@ class experiment():
                     out = EEG.temporal_conv(xb)  # B, 16, 22, 1125
                     out = EEG.spatial_conv(out)  # B, 32, 1, 281
                     out = EEG.separable_conv(out)  # B, 32, 1, 33
-
-                    # out = gru(out)
 
                     mask_mars = mars_selector(out.clone().detach(), self.num_batch, actor_temporal, actor_spectral,
                                               critic_centralized, actor_temporal_optimizer, actor_spectral_optimizer,
@@ -297,15 +295,15 @@ def main(num_samples=10, gpus_per_trial=1):
 def loveray(config, checkpoint_dir=None):
     seed_iter = 1
     subj = args.subjectID
-    data_dir = "DATA_DIR"
+    data_dir = "DATASET_DIR"
     # train_X = torch.load(f"{data_dir}/ku-mi/S{subj}_X_train.pt").numpy()
     # trY = torch.load(f"{data_dir}/ku-mi/S{subj}_y_train.pt").numpy()
     # test_X = torch.load(f"{data_dir}/ku-mi/S{subj}_X_test.pt").numpy()
     # teY = torch.load(f"{data_dir}/ku-mi/S{subj}_y_test.pt").numpy()
-    train_X = np.load(f"{data_dir}/bcic_dataset/S0{subj}_train_X.npy")
-    trY = np.load(f"{data_dir}/bcic_dataset/S0{subj}_train_y.npy")
-    test_X = np.load(f"{data_dir}/bcic_dataset/S0{subj}_test_X.npy")
-    teY = np.load(f"{data_dir}/bcic_dataset/S0{subj}_test_y.npy")
+    train_X = np.load(f"bcic_dataset/S0{subj}_train_X.npy")
+    trY = np.load(f"bcic_dataset/S0{subj}_train_y.npy")
+    test_X = np.load(f"bcic_dataset/S0{subj}_test_X.npy")
+    teY = np.load(f"bcic_dataset/S0{subj}_test_y.npy")
 
     train_Y = np.zeros((trY.size, trY.max() + 1))
     train_Y[np.arange(trY.size), trY] = 1
